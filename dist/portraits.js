@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {character,disposeCharacter} from './models.js?v=0.3';
+import {character,disposeCharacter} from './models.js?v=0.4';
 // One temporary renderer for all roster portraits. Assets show the actual game meshes.
 export function makePortraits(types){
  const r=new T.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});r.setSize(144,170,false);r.setPixelRatio(1);r.outputColorSpace=T.SRGBColorSpace;

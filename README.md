@@ -1,4 +1,4 @@
-# Pixel Chaos — Alpha 0.3 / GOD Chaos
+# Pixel Chaos — Alpha 0.4 / Ability Rework
 
 Simulador de batalhas 3D para navegador de celular, com 20 personagens de anime, filmes e séries. Modelos arredondados, membros articulados, detalhes pixelados e variantes GOD. Recursos locais: o jogo não depende de CDN durante a execução.
 
@@ -14,6 +14,28 @@ Sirva `dist/`: `python3 -m http.server 8080 --directory dist`. Abra `http://loca
 - **Mover** desloca a câmera; **Mapa** retorna ao centro e amplia a visão.
 - Batalhas automáticas com pausa, 0,5× / 1× / 2× e limite de tempo de quatro minutos.
 - Sandbox sem limite fixo de unidades. A colocação respeita espaço físico livre na arena; os desafios mantêm seus orçamentos.
+
+## Habilidades refeitas
+
+Cada um dos 20 personagens tem uma receita visual própria e uma pose de preparação e liberação. O dano especial só é liberado depois da preparação; morte ou atordoamento podem cancelar o golpe. Naruto e Sasuke avançam no golpe; a Força de Vader levanta visualmente o alvo durante a imobilização.
+
+- Goku e Vegeta: preparação nas mãos, feixe com núcleo luminoso, camadas transparentes e espirais em movimento.
+- Naruto: Rasengan com trilhas giratórias, avanço e onda de impacto.
+- Luffy e Saitama: preparação do soco, extensão, anéis de pressão e poeira.
+- Gojo: energias azul e vermelha se aproximam antes da explosão roxa.
+- Ichigo e Tanjiro: cortes em crescente e espirais de água com partículas claras.
+- Vader, Yoda, Eleven e Geralt: efeitos distintos de estrangulamento, cura, telecinese e onda direcional.
+- Homem-Aranha: disparo em duas linhas e rede radial que se fecha no alvo atingido.
+- Elsa: círculo de gelo, cristais que crescem do chão e neve.
+- Wandinha: Mãozinha articulada e linhas de sombra no chão.
+- Sasuke e Thor: eletricidade ramificada e raios do céu.
+- Bakugo: fogo translúcido, fumaça, faíscas e ondas de choque.
+- Homem de Ferro: mísseis com corpos 3D, trajetória elevada e rastros de propulsão.
+- Harry Potter: espirais mágicas, centelhas e feitiços com brilho em estrela.
+
+Os projéteis têm núcleo luminoso e rastros que diminuem ao longo do percurso. Teias, gelo e feitiços têm formatos diferentes. Efeitos usam transparência para não cobrir a arena com esferas opacas. O orçamento de efeitos decorativos pode simplificar partículas em multidões; não remove projéteis, dano ou unidades simuladas.
+
+Na inspeção, toque **Demonstrar habilidade** para ver o modelo e o especial em um palco separado, sem modificar seu save ou sua formação. O áudio continua opcional; os novos sons são sintetizados localmente. A qualidade Alta aumenta o orçamento de efeitos.
 
 ## GOD: modificadores reais
 
@@ -66,11 +88,14 @@ Não há teto de população na colocação, importação, gravação ou simula�
 - `world.js`: dimensões, limites espaciais e zoom.
 - `formation.js`: importação compatível e posicionamento de grupos, sem truncar unidades.
 - `models.js` / `portraits.js`: modelos e retratos gerados dos próprios modelos.
-- `sim.js`: combate, projéteis, estados e grade espacial.
+- `sim.js`: combate, preparação, cancelamento, projéteis, estados e grade espacial.
+- `abilities.js`: tempos, poses, paletas e identidade de cada golpe.
+- `ability-fx.js`: geometria animada, efeitos, impactos e controle de recursos.
+- `ability-audio.js`: sons por família de habilidade e limitação de sobreposição.
 - `crowd.js`: renderização em lotes para multidões e projéteis.
 - `game.js`: interface, arena, câmera, controles e efeitos.
 - `vendor/`: Three.js r160 incluído sob licença MIT.
 
-Rode `npm test` (Node 18+). Há testes dos 20 modelos e variantes GOD, todos os confrontos, multiplicadores exatos, projéteis independentes, persistência de 1.000 unidades, lotes de 5.000 projéteis e compatibilidade com saves anteriores. As mesmas chaves de progresso e formação das Alphas 0.1/0.2 são preservadas.
+Rode `npm test` (Node 18+). Há 24 testes, incluindo receitas visuais, poses, descarte de efeitos, preparação e cancelamento de golpes, além dos 20 modelos e variantes GOD, todos os confrontos, multiplicadores exatos, projéteis independentes, persistência de 1.000 unidades, lotes de 5.000 projéteis e compatibilidade com saves anteriores. As mesmas chaves de progresso e formação das Alphas 0.1/0.2/0.3 são preservadas.
 
 Protótipo independente de fã com código e modelos próprios. Sem vínculo oficial com as franquias. Ainda sem ragdoll físico, controle direto, multiplayer ou APK. Clones e Mãozinha são efeitos de habilidades, não unidades autônomas.

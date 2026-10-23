@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {TYPES} from './catalog.js?v=0.3';
+import {TYPES} from './catalog.js?v=0.4';
 // Shared rounded meshes: only the pixel face/details retain hard edges.
 const geo={sphere:new T.SphereGeometry(1,16,12),capsule:new T.CapsuleGeometry(1,1,4,10),torso:new T.CylinderGeometry(1,.70,1,14),cylinder:new T.CylinderGeometry(1,1,1,14),cone:new T.ConeGeometry(1,1,10),face:new T.PlaneGeometry(.45,.37),plane:new T.PlaneGeometry(1,1),box:new T.BoxGeometry(1,1,1),ring:new T.RingGeometry(.53,.58,24),shadow:new T.CircleGeometry(.52,20),torus:new T.TorusGeometry(1,.10,6,20)};
 const materials=new Map(),faces=new Map();

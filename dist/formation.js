@@ -1,5 +1,5 @@
-import {TYPES,unitCost} from './catalog.js?v=0.3';
-import {WORLD} from './world.js?v=0.3';
+import {TYPES,unitCost} from './catalog.js?v=0.4';
+import {WORLD} from './world.js?v=0.4';
 export function validFormation(value){return Array.isArray(value)?value.filter(f=>f&&Object.hasOwn(TYPES,f.type)&&['blue','red'].includes(f.team)&&Number.isFinite(f.x)&&Number.isFinite(f.z)&&Math.abs(f.x)<=WORLD.halfX&&Math.abs(f.z)<=WORLD.halfZ).map(f=>({type:f.type,team:f.team,x:f.x,z:f.z,god:f.god===true})):[];}
 export function placeGroup(formation,{type,team,x,z,god=false,amount=1,budget=Infinity}){
  if(!Object.hasOwn(TYPES,type)||!Number.isSafeInteger(amount)||amount<1)return {added:0,reason:'Quantidade inválida.'};
