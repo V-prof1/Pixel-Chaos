@@ -1,47 +1,76 @@
-# Pixel Chaos — Alpha 0.2
+# Pixel Chaos — Alpha 0.3 / GOD Chaos
 
-Simulador de batalhas em arena 3D para navegador de celular. Elenco de 12 personagens de anime, filmes e séries, com modelos próprios de formas arredondadas, membros articulados e detalhes pixelados. Não depende de downloads externos durante a execução.
+Simulador de batalhas 3D para navegador de celular, com 20 personagens de anime, filmes e séries. Modelos arredondados, membros articulados, detalhes pixelados e variantes GOD. Recursos locais: o jogo não depende de CDN durante a execução.
 
 ## Jogar
 
-Sirva `dist/` com qualquer servidor HTTP estático: `python3 -m http.server 8080 --directory dist`. Abra `http://localhost:8080`.
+Sirva `dist/`: `python3 -m http.server 8080 --directory dist`. Abra `http://localhost:8080`.
 
-- Escolha um personagem; toque no campo para posicionar. Azul de um lado, vermelho do outro.
-- Filtre por Animes, Filmes ou Séries, ou busque por nome/universo. Deslize a lista horizontalmente para ver o elenco.
-- Toque no nome do personagem selecionado para inspecionar o modelo 3D. Arraste para girar.
-- Arraste na arena para girar a câmera; pinça, roda do mouse e +/− ajustam o zoom.
-- Inicie a batalha; use pausa e velocidades 0,5×, 1× e 2×.
-- Sandbox: até 40 unidades combinadas. Desafios: cinco formações com orçamento.
+- Escolha o time e o personagem. Defina **Por toque** para colocar grupos com um toque no chão.
+- **GOD** alterna a variante das próximas unidades. As já posicionadas mantêm sua variante.
+- Filtre por Anime, Filmes ou Séries ou busque pelo nome/universo. A lista desliza horizontalmente.
+- Toque no nome do selecionado para ver e girar seu modelo 3D.
+- Arraste na arena para girar; pinça, roda do mouse e +/− ajustam o zoom.
+- **Mover** desloca a câmera; **Mapa** retorna ao centro e amplia a visão.
+- Batalhas automáticas com pausa, 0,5× / 1× / 2× e limite de tempo de quatro minutos.
+- Sandbox sem limite fixo de unidades. A colocação respeita espaço físico livre na arena; os desafios mantêm seus orçamentos.
 
-## Elenco e habilidades
+## GOD: modificadores reais
+
+Cada habilidade recebe os modificadores aplicáveis. Personagens híbridos acumulam seus benefícios.
+
+| Característica | Variante GOD |
+| --- | --- |
+| Ataques de longa distância | 100× projéteis por disparo, com trajetória, alvo e impacto independentes |
+| Corpo a corpo | 100× impulso de empurrão e dano recebido dividido por 10 |
+| Explosivo | 100× dano explosivo e raio 10× maior (área 100× maior) |
+| Suporte | 100× cura e alcance 10× maior |
+| Controle | Duração dos efeitos 100× maior e raio de controle 10× maior |
+
+Exemplos: Goku GOD lança 100 disparos por ataque. Vegeta GOD lança 300 projéteis no Final Flash (3 normais × 100); Homem de Ferro GOD lança 600 mísseis por salva (6 × 100). Naruto GOD acumula explosão ampliada e bônus de corpo a corpo. Gojo GOD acumula rajadas ampliadas e explosões ampliadas. Unidades GOD usam o mesmo custo de colocação da versão normal.
+
+## Elenco
 
 | Personagem | Universo | Habilidade |
 | --- | --- | --- |
-| Goku | Dragon Ball | Kamehameha atravessa inimigos em linha |
-| Naruto | Naruto | Rasengan em área e clones visuais temporários |
-| Luffy | One Piece | Soco elástico com empurrão |
-| Gojo | Jujutsu Kaisen | Vazio Roxo, lentidão e proteção temporária |
-| Ichigo | Bleach | Getsuga Tensho em linha |
-| Tanjiro | Demon Slayer | Corte circular de água e proteção breve |
-| Darth Vader | Star Wars | Força causa dano e imobiliza |
-| Yoda | Star Wars | Cura aliados próximos e afasta inimigos |
-| Homem-Aranha | Marvel | Teia imobiliza e causa lentidão em área |
-| Elsa | Frozen | Tempestade de gelo com lentidão em área |
-| Eleven | Stranger Things | Onda telecinética, arremesso e interrupção |
-| Wandinha | Wednesday | Ataque da Mãozinha e proteção temporária |
+| Goku | Dragon Ball | Kamehameha |
+| Naruto | Naruto | Rasengan e clones visuais |
+| Luffy | One Piece | Soco elástico |
+| Gojo | Jujutsu Kaisen | Vazio Roxo |
+| Ichigo | Bleach | Getsuga Tensho |
+| Tanjiro | Demon Slayer | Respiração da Água |
+| Darth Vader | Star Wars | Estrangulamento da Força |
+| Yoda | Star Wars | Cura e onda da Força |
+| Homem-Aranha | Marvel | Teia aprisionadora |
+| Elsa | Frozen | Tempestade de Gelo |
+| Eleven | Stranger Things | Explosão telecinética |
+| Wandinha | Wednesday | Mãozinha e sombra |
+| Vegeta | Dragon Ball | Final Flash |
+| Sasuke | Naruto | Chidori |
+| Saitama | One Punch Man | Soco Sério |
+| Bakugo | My Hero Academia | Howitzer Impact |
+| Homem de Ferro | Marvel | Salva de mísseis |
+| Thor | Marvel | Tempestade de Raios |
+| Harry Potter | Harry Potter | Estupefaça |
+| Geralt | The Witcher | Aard |
 
-## Estrutura
+## Arena e desempenho
 
-- `dist/catalog.js`: elenco, estatísticas e universos, com IDs estáveis.
-- `dist/models.js`: corpos arredondados, roupas, acessórios e rostos pixelados.
-- `dist/portraits.js`: retratos gerados dos próprios modelos do jogo.
-- `dist/game.js`: arena, interface, efeitos, animações, câmera e controles.
-- `dist/sim.js`: simulação de combate sem dependência da renderização.
-- `dist/vendor/`: Three.js r160, incluído localmente sob licença MIT.
-- `tests/`: testes de modelos, todos os confrontos, estados de habilidades e batalhas de 40 unidades. Rode `npm test` (Node 18+).
+A arena mede 100 × 68 unidades, contra 25 × 17 anteriormente: 16× a área. A câmera pode deslocar, aproximar ou afastar para alcançar todas as regiões.
 
-Os dados de formação e progresso da Alpha 0.1 usam as mesmas chaves de armazenamento e continuam válidos. Não limpe os dados do navegador para atualizar.
+Não há teto de população na colocação, importação, gravação ou simulação. Acima de 80 unidades, a renderização usa modelos agrupados com pose simplificada e formas arredondadas, mantendo todas as unidades e suas habilidades na simulação. A busca de alvos e a separação usam uma grade espacial. Projéteis são desenhados em um lote que cresce conforme necessário, sem teto de tiros simulados; partículas decorativas recebem um orçamento visual separado. A capacidade prática depende da memória e do desempenho do dispositivo.
 
-## Estado
+## Estrutura e validação
 
-Protótipo independente de fã, sem vínculo oficial com as franquias. Modelos e código próprios. Combate simplificado, empurrões e queda animada; ainda sem ragdoll físico, controle direto, multiplayer ou APK. Clones são efeitos temporários, não unidades autônomas. Mãozinha aparece como efeito de habilidade. Limite de 40 personagens pode exigir qualidade leve em celulares mais simples.
+- `catalog.js`: elenco, atributos e multiplicadores GOD.
+- `world.js`: dimensões, limites espaciais e zoom.
+- `formation.js`: importação compatível e posicionamento de grupos, sem truncar unidades.
+- `models.js` / `portraits.js`: modelos e retratos gerados dos próprios modelos.
+- `sim.js`: combate, projéteis, estados e grade espacial.
+- `crowd.js`: renderização em lotes para multidões e projéteis.
+- `game.js`: interface, arena, câmera, controles e efeitos.
+- `vendor/`: Three.js r160 incluído sob licença MIT.
+
+Rode `npm test` (Node 18+). Há testes dos 20 modelos e variantes GOD, todos os confrontos, multiplicadores exatos, projéteis independentes, persistência de 1.000 unidades, lotes de 5.000 projéteis e compatibilidade com saves anteriores. As mesmas chaves de progresso e formação das Alphas 0.1/0.2 são preservadas.
+
+Protótipo independente de fã com código e modelos próprios. Sem vínculo oficial com as franquias. Ainda sem ragdoll físico, controle direto, multiplayer ou APK. Clones e Mãozinha são efeitos de habilidades, não unidades autônomas.

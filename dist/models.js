@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {TYPES} from './catalog.js?v=0.2';
+import {TYPES} from './catalog.js?v=0.3';
 // Shared rounded meshes: only the pixel face/details retain hard edges.
-const geo={sphere:new T.SphereGeometry(1,16,12),capsule:new T.CapsuleGeometry(1,1,4,10),torso:new T.CylinderGeometry(1,.70,1,14),cylinder:new T.CylinderGeometry(1,1,1,14),cone:new T.ConeGeometry(1,1,10),face:new T.PlaneGeometry(.45,.37),plane:new T.PlaneGeometry(1,1),box:new T.BoxGeometry(1,1,1),ring:new T.RingGeometry(.53,.58,24),shadow:new T.CircleGeometry(.52,20)};
+const geo={sphere:new T.SphereGeometry(1,16,12),capsule:new T.CapsuleGeometry(1,1,4,10),torso:new T.CylinderGeometry(1,.70,1,14),cylinder:new T.CylinderGeometry(1,1,1,14),cone:new T.ConeGeometry(1,1,10),face:new T.PlaneGeometry(.45,.37),plane:new T.PlaneGeometry(1,1),box:new T.BoxGeometry(1,1,1),ring:new T.RingGeometry(.53,.58,24),shadow:new T.CircleGeometry(.52,20),torus:new T.TorusGeometry(1,.10,6,20)};
 const materials=new Map(),faces=new Map();
 function material(color){if(!materials.has(color))materials.set(color,new T.MeshLambertMaterial({color}));return materials.get(color);}
 function part(parent,shape,color,x,y,z,sx,sy,sz){const mesh=new T.Mesh(geo[shape],material(color));mesh.position.set(x,y,z);mesh.scale.set(sx,sy,sz);parent.add(mesh);return mesh;}
@@ -29,7 +29,7 @@ const capeGeo=capeGeometry(),capeMats=new Map();
 function cape(parent,color){if(!capeMats.has(color))capeMats.set(color,new T.MeshLambertMaterial({color,side:T.DoubleSide}));const m=new T.Mesh(capeGeo,capeMats.get(color));parent.add(m);return m;}
 function hairSpikes(parent,color,count=7,height=.30){for(let i=0;i<count;i++){const a=(i/count-.5)*3.5;const m=part(parent,'cone',color,Math.sin(a)*.22,2.57+Math.cos(a)*.025,-.04+Math.cos(a)*.04,.11,height,.11);m.rotation.z=-Math.sin(a)*.48;m.rotation.x=-.15;}}
 function sword(parent,color=0xc8d8d9,saber=false){const g=new T.Group();g.position.set(0,-.40,.08);parent.add(g);segment(g,0x444550,0,.08,0,.045,.22);part(g,'cylinder',0x9a9ba0,0,.21,0,.12,.035,.075);const blade=part(g,saber?'capsule':'torso',color,0,.87,0,saber?.035:.065,saber?.42:1.25,saber?.035:.024);if(!saber)blade.rotation.z=Math.PI;return g;}
-export function character(type,team){
+export function character(type,team,god=false){
  const d=TYPES[type];if(!d)throw Error('Unknown character '+type);
  const root=new T.Group(),body=new T.Group();root.add(body);const scale=d.scale||1;body.scale.setScalar(scale);
  const shadow=new T.Mesh(geo.shadow,new T.MeshBasicMaterial({color:0x13281e,transparent:true,opacity:.23,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.015;root.add(shadow);
@@ -61,7 +61,7 @@ export function character(type,team){
   segment(knee,type==='luffy'?d.skin:d.pants,0,-.21,0,.091,.43,.095);
   ball(knee,type==='luffy'?0x6d573f:0x242c3c,0,-.50,.07,.11,.075,.195);
  }
- if(!['spiderman','vader','yoda'].includes(type)){
+ if(!['spiderman','vader','yoda','saitama','ironman'].includes(type)){
   const scalp=ball(body,d.hair,0,2.40,-.035,.273,.22,.255);
   if(['elsa','eleven','wednesday'].includes(type)){scalp.scale.y=.25;for(const side of [-1,1])ball(body,d.hair,side*.23,2.24,-.06,.075,.27,.14);}
  }
@@ -147,9 +147,63 @@ export function character(type,team){
   }
   for(let i=0;i<4;i++)ball(body,0xb9b7c0,0,1.68-i*.105,.253,.013,.013,.009);
  }
- const h=2.94*scale;
+
+ if(type==='vegeta'){
+  hairSpikes(body,d.hair,8,.37);
+  part(body,'torso',d.accent,0,1.60,.14,.32,.47,.19);
+  for(const side of [-1,1]){part(body,'torso',0xc0a46e,side*.25,1.77,.03,.11,.19,.27);ball(forearms[side===-1?0:1],0xf0ebda,0,-.31,.025,.10,.17,.09);}
+  part(body,'box',0xb79b68,0,1.51,.339,.44,.18,.018);
+ }
+ if(type==='sasuke'){
+  hairSpikes(body,d.hair,7,.29);band(body,d.accent,1.21,.29,.12);
+  const tie=part(body,'torus',d.accent,0,1.20,.15,.1,.1,.1);
+  part(body,'torso',d.skin,0,1.81,.23,.08,.26,.018);sword(forearms[1]);
+ }
+ if(type==='saitama'){
+  cape(body,0xe3e6e0);band(body,0x262e35,1.22,.28,.08);
+  for(const fore of forearms)ball(fore,d.accent,0,-.28,.03,.115,.20,.11);
+  for(const leg of legs)segment(leg,d.accent,0,-.77,.01,.10,.43,.11);
+  part(body,'box',0xc5cbd0,0,1.60,.245,.025,.48,.018);
+ }
+ if(type==='bakugo'){
+  hairSpikes(body,d.hair,10,.25);
+  for(const side of [-1,1]){const strap=part(body,'box',d.accent,side*.12,1.58,.25,.08,.57,.035);strap.rotation.z=side*.45;}
+  for(const fore of forearms){part(fore,'cylinder',0x60735c,0,-.23,0,.16,.34,.16);band(fore,0x2d3936,-.32,.17,.07);}
+  part(body,'box',0x232e35,0,2.27,.28,.47,.12,.02);
+ }
+ if(type==='ironman'){
+  ball(body,0xc49c55,0,2.24,.15,.23,.25,.16);
+  for(const side of [-1,1])part(body,'box',0xc4f9ff,side*.10,2.29,.309,.12,.035,.015);
+  const reactor=part(body,'cylinder',0xc0f5ff,0,1.66,.255,.085,.025,.085);reactor.rotation.x=Math.PI/2;
+  for(const fore of forearms)segment(fore,d.accent,0,-.15,.03,.095,.24,.09);
+  for(const side of [-1,1])ball(body,d.accent,side*.15,.91,.09,.13,.16,.07);
+ }
+ if(type==='thor'){
+  cape(body,d.accent);for(const side of [-1,1])for(const y of [1.69,1.43])ball(body,0xb6c2c9,side*.20,y,.235,.09,.09,.045);
+  ball(body,d.hair,0,2.05,.16,.18,.10,.10);
+  const hammer=new T.Group();hammer.position.set(0,-.4,.08);forearms[1].add(hammer);segment(hammer,0x796352,0,.14,0,.035,.45);part(hammer,'box',0xa7b7be,0,.45,0,.36,.24,.22);
+ }
+ if(type==='harry'){
+  cape(body,0x202430);part(body,'torso',0xaeb6bd,0,1.67,.24,.20,.32,.02);
+  for(const side of [-1,1]){const glasses=part(body,'torus',0x30313b,side*.12,2.25,.282,.083,.083,.025);}
+  part(body,'box',0x30313b,0,2.25,.287,.07,.015,.018);
+  part(body,'box',d.accent,0,1.69,.267,.065,.29,.015);
+  segment(forearms[1],0x735544,0,-.13,.20,.017,.55,.017).rotation.x=.5;
+  part(body,'box',0x9c5655,.11,2.44,.25,.025,.08,.008).rotation.z=.4;
+ }
+ if(type==='geralt'){
+  ball(body,d.hair,0,2.37,-.11,.27,.22,.20);segment(body,d.hair,0,2.13,-.22,.11,.31,.10);
+  for(const side of [-1,1])part(body,'torso',0x62696a,side*.20,1.63,.13,.13,.42,.18);
+  part(body,'box',0x948574,0,1.53,.27,.05,.52,.025).rotation.z=.6;sword(forearms[1]);
+  part(body,'box',0x9f7972,.13,2.25,.279,.018,.17,.01);
+ }
+ if(god){
+  const halo=part(body,'torus',0xffdb69,0,2.94,0,.38,.38,.38);halo.rotation.x=Math.PI/2;
+  for(let i=-1;i<=1;i++)part(body,'cone',0xffd25c,i*.12,2.70,.02,.06,.20,.06);
+ }
+ const h=(god?3.18:2.94)*scale;
  const barBack=part(root,'box',0x1c2d32,0,h,0,.7,.06,.04),bar=part(root,'box',team==='blue'?0x68d2ff:0xff7976,0,h+.001,.025,.68,.038,.02);
- root.userData={body,arms,legs,forearms,knees,head,bar,barBack,ring,shadow,type,scale};
+ root.userData={body,arms,legs,forearms,knees,head,bar,barBack,ring,shadow,type,scale,god};
  return root;
 }
 export function disposeCharacter(root){root.userData.shadow.material.dispose();root.userData.ring.material.dispose();}
